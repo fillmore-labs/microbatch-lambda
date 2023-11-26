@@ -1,0 +1,69 @@
+= Go Micro-Batch Demonstration
+:Author:    Oliver Eikemeier
+:Email:     <eikemeier@fillmore-labs.com>
+:Date:      2023-11
+:Revision:  v0.0.1
+:toc: macro
+
+image:https://img.shields.io/github/license/fillmore-labs/microbatch-lambda[title="License",link=https://github.com/fillmore-labs/microbatch-lambda/blob/main/LICENSE]
+
+toc::[]
+
+== Purpose
+
+This code demonstrates the use of the go package https://pkg.go.dev/fillmore-labs.com/microbatch[`fillmore-labs.com/microbatch`].
+
+== Running
+
+=== Prerequisites
+
+The example assumes https://docs.aws.amazon.com/cli/[AWS cli], https://docs.aws.amazon.com/cdk/[AWS cdk], https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html[configured AWS credentials], https://go.dev[Go] and https://mikefarah.gitbook.io/yq/[yq] installed.
+
+Deploy the Lambda to your account with the supplied script
+
+[source,shell]
+----
+./deploy.sh
+----
+
+This deploys the https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/stacks.html[CloudFormation stack] and updates link:config.yaml[] for the client.
+
+=== Starting the Client
+
+Simply
+
+[source,shell]
+go run ./cmd/client
+
+=== Cleaning Up
+
+[source,shell]
+cdk destroy
+
+== Packages
+
+=== ./
+
+The https://docs.aws.amazon.com/lambda/latest/dg/golang-handler.html[AWS Lambda] function handler.
+
+The business logic `ProcessJobs` is in link:function.go#L10[function.go].
+
+=== ./cmd/app
+
+The https://docs.aws.amazon.com/cdk/v2/guide/apps.html[AWS CDK app] containing the lambda stack.
+
+=== ./cmd/bootstrap
+
+The https://docs.aws.amazon.com/lambda/latest/dg/golang-handler.html[AWS Lambda] entry point.
+
+=== ./cmd/client
+
+The sample client using https://pkg.go.dev/fillmore-labs.com/microbatch[`fillmore-labs.com/microbatch`].
+
+=== ./pkg/api
+
+Shared API for client and Lambda handler.
+
+=== ./pkg/server
+
+The https://docs.aws.amazon.com/cdk/v2/guide/stacks.html[AWS CDK stack] describing the lambda deployment.

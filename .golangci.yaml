@@ -1,0 +1,26 @@
+---
+run:
+  modules-download-mode: readonly
+linters:
+  enable-all: true
+  disable:
+    # deprecated
+    - deadcode
+    - exhaustivestruct
+    - golint
+    - ifshort
+    - interfacer
+    - maligned
+    - nosnakecase
+    - scopelint
+    - structcheck
+    - varcheck
+    # disabled
+    - depguard
+    - exhaustruct
+    - forbidigo
+    - ireturn
+    - nonamedreturns
+    - varnamelen
+    - wrapcheck
+    - wsl

@@ -1,0 +1,3 @@
+//go:generate wire ./...
+
+package function
