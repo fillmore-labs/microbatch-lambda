@@ -1,32 +1,32 @@
 package function
 
 import (
-	"encoding/json"
 	"fmt"
+	"log/slog"
+	"strconv"
+	"strings"
 
 	"github.com/fillmore-labs/microbatch-lambda/pkg/api"
 )
 
-func ProcessJobs(s []byte) ([]byte, error) {
-	var j []api.Job
-	err := json.Unmarshal(s, &j)
-	if err != nil {
-		return nil, err
+func ProcessJobs(jobs []api.Job) []api.JobResult {
+	jobIDs := make([]string, 0, len(jobs))
+	for _, job := range jobs {
+		jobIDs = append(jobIDs, strconv.FormatInt(int64(job.ID), 10))
+	}
+	slog.Info("Processing", "jobs", strings.Join(jobIDs, ", "))
+
+	results := make([]api.JobResult, 0, len(jobs))
+	for _, job := range jobs {
+		results = append(results, ProcessJob(job))
 	}
 
-	r := make([]api.JobResult, 0, len(j))
-	for _, job := range j {
-		id := job.CorrelationID()
-		r = append(r, api.JobResult{
-			ID:   id,
-			Body: fmt.Sprintf("Hello, %s!", job.Body),
-		})
-	}
+	return results
+}
 
-	rr, err := json.Marshal(r)
-	if err != nil {
-		return nil, err
+func ProcessJob(job api.Job) api.JobResult {
+	return api.JobResult{
+		ID:   job.ID,
+		Body: fmt.Sprintf("Hello, %s!", job.Body),
 	}
-
-	return rr, nil
 }

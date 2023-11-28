@@ -12,11 +12,3 @@ type (
 		Err  string `json:"error,omitempty"`
 	}
 )
-
-func (j *Job) CorrelationID() JobID {
-	return j.ID
-}
-
-func (j *JobResult) CorrelationID() JobID {
-	return j.ID
-}

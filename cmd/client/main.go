@@ -49,7 +49,13 @@ func main() {
 	const batchSize = 15
 	const batchDelay = 250 * time.Millisecond
 
-	batcher := microbatch.NewBatcher(processor, batchSize, batchDelay)
+	batcher := microbatch.NewBatcher(
+		processor,
+		func(j *api.Job) api.JobID { return j.ID },
+		func(r *api.JobResult) api.JobID { return r.ID },
+		batchSize,
+		batchDelay,
+	)
 
 	log.Println("Submitting jobs...")
 
