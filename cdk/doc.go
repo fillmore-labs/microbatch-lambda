@@ -1,3 +1,3 @@
 //go:generate wire ./...
 
-package function
+package main

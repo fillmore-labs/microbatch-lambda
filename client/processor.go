@@ -15,7 +15,7 @@ import (
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	signer "github.com/aws/aws-sdk-go-v2/aws/signer/v4"
-	"github.com/fillmore-labs/microbatch-lambda/pkg/api"
+	"github.com/fillmore-labs/microbatch-lambda/api"
 )
 
 type RemoteProcessor struct {

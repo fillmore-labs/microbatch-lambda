@@ -9,8 +9,16 @@ import (
 )
 
 func NewFn(scope Scope) Fn {
-	fn := lambda_go.NewGoFunction(scope, jsii.String("ServerFunction"), &lambda_go.GoFunctionProps{
-		Entry: jsii.String("./cmd/bootstrap"),
+	fn := lambda_go.NewGoFunction(scope, jsii.String("Handler"), &lambda_go.GoFunctionProps{
+		Entry:     jsii.String("lambda/cmd/bootstrap"),
+		ModuleDir: jsii.String("lambda"),
+		Bundling: &lambda_go.BundlingOptions{
+			GoBuildFlags: jsii.Strings("-ldflags \"-s -w\""),
+			GoProxies: &[]*string{
+				lambda_go.GoFunction_GOOGLE_GOPROXY(),
+				jsii.String("direct"),
+			},
+		},
 
 		Runtime:      lambda.Runtime_PROVIDED_AL2023(),
 		Architecture: lambda.Architecture_ARM_64(),

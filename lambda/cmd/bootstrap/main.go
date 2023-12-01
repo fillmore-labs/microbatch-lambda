@@ -5,7 +5,7 @@ import (
 	"runtime/debug"
 
 	"github.com/aws/aws-lambda-go/lambda"
-	function "github.com/fillmore-labs/microbatch-lambda"
+	function "github.com/fillmore-labs/microbatch-lambda/lambda"
 )
 
 func main() {

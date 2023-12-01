@@ -9,7 +9,7 @@ import (
 
 	"fillmore-labs.com/microbatch"
 	"github.com/aws/aws-sdk-go-v2/config"
-	"github.com/fillmore-labs/microbatch-lambda/pkg/api"
+	"github.com/fillmore-labs/microbatch-lambda/api"
 	"github.com/spf13/viper"
 )
 
@@ -66,15 +66,19 @@ func main() {
 	wg.Add(iterations)
 	for i := 0; i < iterations; i++ {
 		time.Sleep(delay)
-		go submitWork(requestContext, i, batcher, &wg)
+		go submitWork(requestContext, &wg, batcher, i)
 	}
 	wg.Wait()
 	cancel()
+
 	batcher.Shutdown()
+
 	log.Println("Done...")
 }
 
-func submitWork(ctx context.Context, i int, batcher *microbatch.Batcher[*api.Job, *api.JobResult], wg *sync.WaitGroup) {
+func submitWork(ctx context.Context, wg *sync.WaitGroup, batcher *microbatch.Batcher[*api.Job, *api.JobResult], i int) {
+	defer wg.Done()
+
 	request := &api.Job{
 		ID:   api.JobID(i),
 		Body: fmt.Sprintf("Name_%d", i),
@@ -87,6 +91,4 @@ func submitWork(ctx context.Context, i int, batcher *microbatch.Batcher[*api.Job
 	} else {
 		log.Printf("Result of job %d: %s\n", i, result.Body)
 	}
-
-	wg.Done()
 }

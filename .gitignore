@@ -8,9 +8,5 @@
 !/.golangci.yaml
 !/.yamlfmt
 !/.yamllint
-/bin/
 /cdk.out/
-/app
-/bootstrap
-/client
 /outputs.json

@@ -1,5 +1,5 @@
 {
-  "app": "go mod download && go run ./cmd/app",
+  "app": "go run ./cdk",
   "versionReporting": false,
   "watch": {
     "include": [

@@ -6,7 +6,7 @@ package main
 import (
 	cdk "github.com/aws/aws-cdk-go/awscdk/v2"
 	"github.com/aws/aws-cdk-go/awscdk/v2/cxapi"
-	"github.com/fillmore-labs/microbatch-lambda/pkg/server"
+	"github.com/fillmore-labs/microbatch-lambda/cdk/pkg/server"
 	"github.com/google/wire"
 )
 
