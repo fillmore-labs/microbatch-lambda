@@ -4,11 +4,9 @@ go 1.21
 
 toolchain go1.21.4
 
-replace github.com/fillmore-labs/microbatch-lambda/api => ../api
-
 require (
 	github.com/aws/aws-lambda-go v1.41.0
-	github.com/fillmore-labs/microbatch-lambda/api v0.0.0-00010101000000-000000000000
+	github.com/fillmore-labs/microbatch-lambda/api v0.0.0-20231201171345-14021567a48a
 )
 
 require (
