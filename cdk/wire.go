@@ -18,7 +18,7 @@ func NewAssembly() cxapi.CloudAssembly {
 		wire.Value(appProps),
 		wire.Bind(new(server.AppScope), new(cdk.App)),
 		env,
-		server.NewStack,
+		server.Set,
 	)
 	return nil
 }

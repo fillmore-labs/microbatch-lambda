@@ -23,10 +23,10 @@ func readProcessorConfig() (ProcessorConfig, error) {
 		return ProcessorConfig{}, fmt.Errorf("can't read configuration file: %w", err)
 	}
 
-	var config ProcessorConfig
-	err := v.UnmarshalExact(&config)
+	var cfg ProcessorConfig
+	err := v.UnmarshalExact(&cfg)
 
-	return config, err
+	return cfg, err
 }
 
 func main() {

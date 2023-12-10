@@ -18,7 +18,14 @@ func NewAssembly() cxapi.CloudAssembly {
 	awscdkAppProps := _wireAppPropsValue
 	app := awscdk.NewApp(awscdkAppProps)
 	environment := env()
-	stack := server.NewStack(app, environment)
+	lambdaStack := server.NewStack(app, environment)
+	fn := server.NewFn(lambdaStack)
+	fnURL := server.NewFnURL(lambdaStack, fn)
+	stack := server.Stack{
+		Fn:          fn,
+		FnURL:       fnURL,
+		LambdaStack: lambdaStack,
+	}
 	cdkApp := CdkApp{
 		App:         app,
 		serverStack: stack,

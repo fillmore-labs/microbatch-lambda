@@ -107,7 +107,7 @@ func (p *RemoteProcessor) createRequest(ctx context.Context, jobs []*api.Job) (*
 
 func (p *RemoteProcessor) parseResponse(response *http.Response) ([]*api.JobResult, error) {
 	body, err := io.ReadAll(response.Body)
-	response.Body.Close()
+	_ = response.Body.Close()
 	if err != nil {
 		return nil, err
 	}
