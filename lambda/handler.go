@@ -7,7 +7,6 @@ import (
 	"net/http"
 
 	"github.com/aws/aws-lambda-go/events"
-	"github.com/fillmore-labs/microbatch-lambda/api"
 )
 
 func Handler(
@@ -24,7 +23,7 @@ func Handler(
 	return MarshalResponse(results)
 }
 
-func UnmarshalBody(request *events.APIGatewayV2HTTPRequest) ([]*api.Job, error) {
+func UnmarshalBody(request *events.APIGatewayV2HTTPRequest) (Jobs, error) {
 	var err error
 	var body []byte
 	if request.IsBase64Encoded {
@@ -36,13 +35,13 @@ func UnmarshalBody(request *events.APIGatewayV2HTTPRequest) ([]*api.Job, error) 
 		body = []byte(request.Body)
 	}
 
-	var jobs []*api.Job
+	var jobs Jobs
 	err = json.Unmarshal(body, &jobs)
 
 	return jobs, err
 }
 
-func MarshalResponse(results []*api.JobResult) (*events.APIGatewayV2HTTPResponse, error) {
+func MarshalResponse(results JobResults) (*events.APIGatewayV2HTTPResponse, error) {
 	response, err := json.Marshal(results)
 	if err != nil {
 		return nil, err

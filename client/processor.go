@@ -18,18 +18,23 @@ import (
 	"github.com/fillmore-labs/microbatch-lambda/api"
 )
 
-type RemoteProcessor struct {
-	ctx         context.Context //nolint:containedctx
-	credentials aws.CredentialsProvider
-	httpSigner  signer.HTTPSigner
-	region      string
-	lambdaURL   string
-	timeOut     time.Duration
-}
+type (
+	Jobs       []*api.Job
+	JobResults []*api.JobResult
+
+	RemoteProcessor struct {
+		ctx         context.Context //nolint:containedctx
+		credentials aws.CredentialsProvider
+		httpSigner  signer.HTTPSigner
+		region      string
+		lambdaURL   string
+		timeOut     time.Duration
+	}
+)
 
 var ErrNotOk = errors.New("response status not 200")
 
-func (p *RemoteProcessor) ProcessJobs(jobs []*api.Job) ([]*api.JobResult, error) {
+func (p *RemoteProcessor) ProcessJobs(jobs Jobs) (JobResults, error) {
 	ctx, cancel := context.WithTimeout(p.ctx, p.timeOut)
 	defer cancel()
 
@@ -74,12 +79,23 @@ func signerOptions(s *signer.SignerOptions) {
 
 const service = "lambda"
 
-func (p *RemoteProcessor) createRequest(ctx context.Context, jobs []*api.Job) (*http.Request, error) {
+func (p *RemoteProcessor) createRequest(ctx context.Context, jobs Jobs) (*http.Request, error) {
 	body, err := json.Marshal(jobs)
 	if err != nil {
 		return nil, err
 	}
 
+	request, err := p.newRequest(ctx, body)
+	if err != nil {
+		return nil, err
+	}
+
+	err = p.signRequest(ctx, body, request)
+
+	return request, err
+}
+
+func (p *RemoteProcessor) newRequest(ctx context.Context, body []byte) (*http.Request, error) {
 	bodyReader := bytes.NewReader(body)
 
 	request, err := http.NewRequestWithContext(ctx, http.MethodPost, p.lambdaURL, bodyReader)
@@ -89,23 +105,22 @@ func (p *RemoteProcessor) createRequest(ctx context.Context, jobs []*api.Job) (*
 
 	request.Header.Set("Content-Type", "application/json")
 
+	return request, nil
+}
+
+func (p *RemoteProcessor) signRequest(ctx context.Context, body []byte, request *http.Request) error {
 	credentials, err := p.credentials.Retrieve(ctx)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	hash := sha256.Sum256(body)
 	payloadHash := hex.EncodeToString(hash[:])
 
-	err = p.httpSigner.SignHTTP(ctx, credentials, request, payloadHash, service, p.region, time.Now())
-	if err != nil {
-		return nil, err
-	}
-
-	return request, nil
+	return p.httpSigner.SignHTTP(ctx, credentials, request, payloadHash, service, p.region, time.Now())
 }
 
-func (p *RemoteProcessor) parseResponse(response *http.Response) ([]*api.JobResult, error) {
+func (p *RemoteProcessor) parseResponse(response *http.Response) (JobResults, error) {
 	body, err := io.ReadAll(response.Body)
 	_ = response.Body.Close()
 	if err != nil {
@@ -118,7 +133,7 @@ func (p *RemoteProcessor) parseResponse(response *http.Response) ([]*api.JobResu
 		return nil, ErrNotOk
 	}
 
-	var result []*api.JobResult
+	var result JobResults
 	err = json.Unmarshal(body, &result)
 
 	return result, err

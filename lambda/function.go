@@ -9,14 +9,19 @@ import (
 	"github.com/fillmore-labs/microbatch-lambda/api"
 )
 
-func ProcessJobs(jobs []*api.Job) []*api.JobResult {
+type (
+	Jobs       []*api.Job
+	JobResults []*api.JobResult
+)
+
+func ProcessJobs(jobs Jobs) JobResults {
 	jobIDs := make([]string, 0, len(jobs))
 	for _, job := range jobs {
 		jobIDs = append(jobIDs, strconv.FormatInt(int64(job.ID), 10))
 	}
 	slog.Info("Processing", "jobs", strings.Join(jobIDs, ", "))
 
-	results := make([]*api.JobResult, 0, len(jobs))
+	results := make(JobResults, 0, len(jobs))
 	for _, job := range jobs {
 		results = append(results, ProcessJob(job))
 	}
