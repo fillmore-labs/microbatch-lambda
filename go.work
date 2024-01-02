@@ -7,4 +7,4 @@ use (
 	./lambda
 )
 
-replace github.com/fillmore-labs/microbatch-lambda/api v0.0.0-20231202105057-c856ec43e576 => ./api
+replace github.com/fillmore-labs/microbatch-lambda/api v0.0.0-20231211165841-367388dbd419 => ./api

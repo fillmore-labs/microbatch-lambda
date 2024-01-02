@@ -53,8 +53,8 @@ func main() {
 		processor,
 		func(j *api.Job) api.JobID { return j.ID },
 		func(r *api.JobResult) api.JobID { return r.ID },
-		batchSize,
-		batchDelay,
+		microbatch.WithSize(batchSize),
+		microbatch.WithTimeout(batchDelay),
 	)
 
 	log.Println("Submitting jobs...")
