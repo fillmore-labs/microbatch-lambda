@@ -1,0 +1,29 @@
+syntax = "proto3";
+package proto.v1alpha1;
+
+option go_package = "github.com/fillmore-labs/microbatch-lambda/api/proto/v1alpha1";
+
+// Job.
+message Job {
+  string body = 1;
+  int64 correlation_id = 15;
+}
+
+// Job Result.
+message JobResult {
+  oneof result {
+    string body = 1;
+    string error = 2;
+  }
+  int64 correlation_id = 15;
+}
+
+// Batch Request.
+message BatchRequest {
+  repeated Job jobs = 1;
+}
+
+// Batch Response.
+message BatchResponse {
+  repeated JobResult results = 1;
+}

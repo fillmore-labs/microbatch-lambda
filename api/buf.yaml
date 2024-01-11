@@ -1,0 +1,14 @@
+---
+version: v1
+lint:
+  allow_comment_ignores: true
+  use:
+    - DEFAULT
+    - COMMENTS
+  except:
+    - COMMENT_ENUM_VALUE
+    - COMMENT_FIELD
+    - COMMENT_ONEOF
+breaking:
+  use:
+    - FILE
