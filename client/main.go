@@ -9,7 +9,7 @@ import (
 
 	"fillmore-labs.com/microbatch"
 	"github.com/aws/aws-sdk-go-v2/config"
-	"github.com/fillmore-labs/microbatch-lambda/api"
+	pb "github.com/fillmore-labs/microbatch-lambda/api/proto/v1alpha1"
 	"github.com/spf13/viper"
 )
 
@@ -49,10 +49,12 @@ func main() {
 	const batchSize = 15
 	const batchDelay = 250 * time.Millisecond
 
+	//
+
 	batcher := microbatch.NewBatcher(
 		processor,
-		func(j *api.Job) api.JobID { return j.ID },
-		func(r *api.JobResult) api.JobID { return r.ID },
+		(*pb.Job).GetCorrelationId,
+		(*pb.JobResult).GetCorrelationId,
 		microbatch.WithSize(batchSize),
 		microbatch.WithTimeout(batchDelay),
 	)
@@ -66,7 +68,7 @@ func main() {
 	wg.Add(iterations)
 	for i := 0; i < iterations; i++ {
 		time.Sleep(delay)
-		go submitWork(requestContext, &wg, batcher, i)
+		go submitWork(requestContext, &wg, batcher, int64(i+1))
 	}
 	wg.Wait()
 	cancel()
@@ -76,19 +78,30 @@ func main() {
 	log.Println("Done...")
 }
 
-func submitWork(ctx context.Context, wg *sync.WaitGroup, batcher *microbatch.Batcher[*api.Job, *api.JobResult], i int) {
+func submitWork(ctx context.Context, wg *sync.WaitGroup, batcher *microbatch.Batcher[*pb.Job, *pb.JobResult], i int64) {
 	defer wg.Done()
 
-	request := &api.Job{
-		ID:   api.JobID(i),
-		Body: fmt.Sprintf("Name_%d", i),
+	request := &pb.Job{
+		Body:          fmt.Sprintf("Job %d", i),
+		CorrelationId: i,
 	}
 
-	result, err := batcher.ExecuteJob(ctx, request)
+	reply, err := batcher.ExecuteJob(ctx, request)
 
 	if err != nil {
 		log.Printf("Error executing job %d: %v\n", i, err)
 	} else {
-		log.Printf("Result of job %d: %s\n", i, result.Body)
+		result := reply.GetResult()
+
+		switch r := result.(type) {
+		case *pb.JobResult_Error:
+			log.Printf("Error executing job %d: %s\n", i, r.Error)
+
+		case *pb.JobResult_Body:
+			log.Printf("Result of job %d: %s\n", i, r.Body)
+
+		default:
+			log.Printf("Missing result for job %d\n", i)
+		}
 	}
 }

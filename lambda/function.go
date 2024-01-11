@@ -6,20 +6,16 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/fillmore-labs/microbatch-lambda/api"
+	pb "github.com/fillmore-labs/microbatch-lambda/api/proto/v1alpha1"
 )
 
 type (
-	Jobs       []*api.Job
-	JobResults []*api.JobResult
+	Jobs       []*pb.Job
+	JobResults []*pb.JobResult
 )
 
 func ProcessJobs(jobs Jobs) JobResults {
-	jobIDs := make([]string, 0, len(jobs))
-	for _, job := range jobs {
-		jobIDs = append(jobIDs, strconv.FormatInt(int64(job.ID), 10))
-	}
-	slog.Info("Processing", "jobs", strings.Join(jobIDs, ", "))
+	slog.Info("Processing", "jobs", JobIDs(jobs))
 
 	results := make(JobResults, 0, len(jobs))
 	for _, job := range jobs {
@@ -29,9 +25,26 @@ func ProcessJobs(jobs Jobs) JobResults {
 	return results
 }
 
-func ProcessJob(job *api.Job) *api.JobResult {
-	return &api.JobResult{
-		ID:   job.ID,
-		Body: fmt.Sprintf("Hello, %s!", job.Body),
+func ProcessJob(job *pb.Job) *pb.JobResult {
+	return &pb.JobResult{
+		Result: &pb.JobResult_Body{
+			Body: fmt.Sprintf("Hello, %s!", job.GetBody()),
+		},
+		CorrelationId: job.GetCorrelationId(),
 	}
+}
+
+type JobIDs []*pb.Job
+
+func (jobs JobIDs) LogValue() slog.Value {
+	var b strings.Builder
+	if len(jobs) > 0 {
+		b.WriteString(strconv.FormatInt(jobs[0].GetCorrelationId(), 10))
+		for _, j := range jobs[1:] {
+			b.WriteString(", ")
+			b.WriteString(strconv.FormatInt(j.GetCorrelationId(), 10))
+		}
+	}
+
+	return slog.StringValue(b.String())
 }

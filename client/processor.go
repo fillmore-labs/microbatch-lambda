@@ -5,22 +5,22 @@ import (
 	"context"
 	"crypto/sha256"
 	"encoding/hex"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
-	"log"
+	"log/slog"
 	"net/http"
 	"time"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	signer "github.com/aws/aws-sdk-go-v2/aws/signer/v4"
-	"github.com/fillmore-labs/microbatch-lambda/api"
+	pb "github.com/fillmore-labs/microbatch-lambda/api/proto/v1alpha1"
+	"google.golang.org/protobuf/proto"
 )
 
 type (
-	Jobs       []*api.Job
-	JobResults []*api.JobResult
+	Jobs       []*pb.Job
+	JobResults []*pb.JobResult
 
 	RemoteProcessor struct {
 		ctx         context.Context //nolint:containedctx
@@ -32,7 +32,7 @@ type (
 	}
 )
 
-var ErrNotOk = errors.New("response status not 200")
+var ErrNotOk = errors.New("non-200 status")
 
 func (p *RemoteProcessor) ProcessJobs(jobs Jobs) (JobResults, error) {
 	ctx, cancel := context.WithTimeout(p.ctx, p.timeOut)
@@ -80,7 +80,9 @@ func signerOptions(s *signer.SignerOptions) {
 const service = "lambda"
 
 func (p *RemoteProcessor) createRequest(ctx context.Context, jobs Jobs) (*http.Request, error) {
-	body, err := json.Marshal(jobs)
+	msg := &pb.BatchRequest{Jobs: jobs}
+
+	body, err := proto.Marshal(msg)
 	if err != nil {
 		return nil, err
 	}
@@ -89,6 +91,10 @@ func (p *RemoteProcessor) createRequest(ctx context.Context, jobs Jobs) (*http.R
 	if err != nil {
 		return nil, err
 	}
+
+	messageType := msg.ProtoReflect().Descriptor().FullName()
+	contentType := fmt.Sprintf("application/x-protobuf; messageType=\"%s\"", messageType)
+	request.Header.Set("Content-Type", contentType)
 
 	err = p.signRequest(ctx, body, request)
 
@@ -102,8 +108,6 @@ func (p *RemoteProcessor) newRequest(ctx context.Context, body []byte) (*http.Re
 	if err != nil {
 		return nil, err
 	}
-
-	request.Header.Set("Content-Type", "application/json")
 
 	return request, nil
 }
@@ -128,13 +132,13 @@ func (p *RemoteProcessor) parseResponse(response *http.Response) (JobResults, er
 	}
 
 	if response.StatusCode != http.StatusOK {
-		log.Printf("Got status %s: %s\n", response.Status, string(body))
+		slog.Warn("Response Error", "status", response.Status)
 
-		return nil, ErrNotOk
+		return nil, fmt.Errorf("response code %d: %w", response.StatusCode, ErrNotOk)
 	}
 
-	var result JobResults
-	err = json.Unmarshal(body, &result)
+	var result pb.BatchResponse
+	err = proto.Unmarshal(body, &result)
 
-	return result, err
+	return result.GetResults(), err
 }

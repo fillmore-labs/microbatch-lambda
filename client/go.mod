@@ -8,8 +8,9 @@ require (
 	fillmore-labs.com/microbatch v0.2.0
 	github.com/aws/aws-sdk-go-v2 v1.24.1
 	github.com/aws/aws-sdk-go-v2/config v1.26.3
-	github.com/fillmore-labs/microbatch-lambda/api v0.0.0-20240102103753-e7301cf708dd
+	github.com/fillmore-labs/microbatch-lambda/api v0.0.0-20240111113308-f9f2df3ad046
 	github.com/spf13/viper v1.18.2
+	google.golang.org/protobuf v1.32.0
 )
 
 require (
@@ -37,7 +38,7 @@ require (
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/subosito/gotenv v1.6.0 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
-	golang.org/x/exp v0.0.0-20240103183307-be819d1f06fc // indirect
+	golang.org/x/exp v0.0.0-20240110193028-0dcbfd608b1e // indirect
 	golang.org/x/sys v0.16.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
