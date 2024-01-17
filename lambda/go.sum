@@ -2,8 +2,8 @@ github.com/aws/aws-lambda-go v1.44.0 h1:Xp9PANXKsSJ23IhE4ths592uWTCEewswPhSH9qpA
 github.com/aws/aws-lambda-go v1.44.0/go.mod h1:dpMpZgvWx5vuQJfBt0zqBha60q7Dd7RfgJv23DymV8A=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
-github.com/fillmore-labs/microbatch-lambda/api v0.0.0-20240111113308-f9f2df3ad046 h1:3mLnkCAyl+evQ+ktUfHTEi2F6LUOpGwqkrGPfleHbPQ=
-github.com/fillmore-labs/microbatch-lambda/api v0.0.0-20240111113308-f9f2df3ad046/go.mod h1:AaJ+PJgDIkzkrcpGQMwBLjkTRwf4d7D7cI2yfy01Cso=
+github.com/fillmore-labs/microbatch-lambda/api v0.0.0-20240111114028-15c58c3b36ef h1:GQa9BdBCJi+YZykfdR6I6p5gIqttwvHV/hTBkprXJUc=
+github.com/fillmore-labs/microbatch-lambda/api v0.0.0-20240111114028-15c58c3b36ef/go.mod h1:AaJ+PJgDIkzkrcpGQMwBLjkTRwf4d7D7cI2yfy01Cso=
 github.com/google/go-cmp v0.5.5 h1:Khx7svrCpmxxtHBq5j2mp/xVjsi8hQMfNLvJFAlrGgU=
 github.com/google/go-cmp v0.5.5/go.mod h1:v8dTdLbMG2kIc/vJvl+f65V22dbkXbowE6jgT/gNBxE=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=

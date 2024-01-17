@@ -1,4 +1,4 @@
-go 1.21.5
+go 1.21.6
 
 use (
 	./api
@@ -7,4 +7,4 @@ use (
 	./lambda
 )
 
-replace github.com/fillmore-labs/microbatch-lambda/api v0.0.0-20240111113308-f9f2df3ad046 => ./api
+replace github.com/fillmore-labs/microbatch-lambda/api v0.0.0-20240111114028-15c58c3b36ef => ./api

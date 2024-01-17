@@ -49,8 +49,6 @@ func main() {
 	const batchSize = 15
 	const batchDelay = 250 * time.Millisecond
 
-	//
-
 	batcher := microbatch.NewBatcher(
 		processor,
 		(*pb.Job).GetCorrelationId,
@@ -65,20 +63,20 @@ func main() {
 	const delay = 12 * time.Millisecond
 
 	var wg sync.WaitGroup
-	wg.Add(iterations)
 	for i := 0; i < iterations; i++ {
+		wg.Add(1)
+		go submitWork(requestContext, batcher, int64(i+1), &wg)
 		time.Sleep(delay)
-		go submitWork(requestContext, &wg, batcher, int64(i+1))
 	}
 	wg.Wait()
-	cancel()
 
+	cancel()
 	batcher.Shutdown()
 
 	log.Println("Done...")
 }
 
-func submitWork(ctx context.Context, wg *sync.WaitGroup, batcher *microbatch.Batcher[*pb.Job, *pb.JobResult], i int64) {
+func submitWork(ctx context.Context, batcher *microbatch.Batcher[*pb.Job, *pb.JobResult], i int64, wg *sync.WaitGroup) {
 	defer wg.Done()
 
 	request := &pb.Job{
@@ -87,21 +85,43 @@ func submitWork(ctx context.Context, wg *sync.WaitGroup, batcher *microbatch.Bat
 	}
 
 	reply, err := batcher.ExecuteJob(ctx, request)
-
 	if err != nil {
 		log.Printf("Error executing job %d: %v\n", i, err)
-	} else {
-		result := reply.GetResult()
 
-		switch r := result.(type) {
-		case *pb.JobResult_Error:
-			log.Printf("Error executing job %d: %s\n", i, r.Error)
+		return
+	}
 
-		case *pb.JobResult_Body:
-			log.Printf("Result of job %d: %s\n", i, r.Body)
+	result, err := extract(reply)
+	if err != nil {
+		log.Printf("Error executing job %d: %v\n", i, err)
 
-		default:
-			log.Printf("Missing result for job %d\n", i)
-		}
+		return
+	}
+
+	log.Printf("Result of job %d: %s\n", i, result)
+}
+
+type remoteError struct {
+	msg string
+}
+
+func (r *remoteError) Error() string {
+	return r.msg
+}
+
+var errMissingResult = &remoteError{"missing result"}
+
+func extract(reply *pb.JobResult) (string, error) {
+	result := reply.GetResult()
+
+	switch r := result.(type) {
+	case *pb.JobResult_Error:
+		return "", &remoteError{r.Error}
+
+	case *pb.JobResult_Body:
+		return r.Body, nil
+
+	default:
+		return "", errMissingResult
 	}
 }
