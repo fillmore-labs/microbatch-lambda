@@ -19,7 +19,8 @@ func NewAssembly() cxapi.CloudAssembly {
 	app := awscdk.NewApp(awscdkAppProps)
 	environment := env()
 	lambdaStack := server.NewStack(app, environment)
-	fn := server.NewFn(lambdaStack)
+	logGroup := server.NewLogGroup(lambdaStack)
+	fn := server.NewFn(lambdaStack, logGroup)
 	fnURL := server.NewFnURL(lambdaStack, fn)
 	stack := server.Stack{
 		Fn:          fn,

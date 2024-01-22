@@ -10,6 +10,7 @@ import (
 var Set = wire.NewSet(
 	NewStack,
 	wire.Bind(new(Scope), new(LambdaStack)),
+	NewLogGroup,
 	NewFn,
 	NewFnURL,
 	wire.Struct(new(Stack), "*"),

@@ -8,7 +8,15 @@ import (
 	"github.com/aws/jsii-runtime-go"
 )
 
-func NewFn(scope Scope) Fn {
+func NewLogGroup(scope Scope) LogGroup {
+	return logs.NewLogGroup(scope, jsii.String("LogGroup"), &logs.LogGroupProps{
+		LogGroupClass: logs.LogGroupClass_STANDARD,
+		RemovalPolicy: cdk.RemovalPolicy_DESTROY,
+		Retention:     logs.RetentionDays_THREE_DAYS,
+	})
+}
+
+func NewFn(scope Scope, logGroup LogGroup) Fn {
 	fn := lambda_go.NewGoFunction(scope, jsii.String("Handler"), &lambda_go.GoFunctionProps{
 		Entry:     jsii.String("lambda/cmd/bootstrap"),
 		ModuleDir: jsii.String("lambda"),
@@ -23,7 +31,7 @@ func NewFn(scope Scope) Fn {
 		Runtime:      lambda.Runtime_PROVIDED_AL2023(),
 		Architecture: lambda.Architecture_ARM_64(),
 
-		LogRetention: logs.RetentionDays_THREE_DAYS,
+		LogGroup: logGroup,
 	})
 
 	return fn
