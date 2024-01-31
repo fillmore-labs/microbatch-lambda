@@ -2,14 +2,14 @@ module github.com/fillmore-labs/microbatch-lambda/cdk
 
 go 1.21
 
-toolchain go1.21.6
+toolchain go1.22.0
 
 require (
-	github.com/aws/aws-cdk-go/awscdk/v2 v2.122.0
-	github.com/aws/aws-cdk-go/awscdklambdagoalpha/v2 v2.122.0-alpha.0
+	github.com/aws/aws-cdk-go/awscdk/v2 v2.126.0
+	github.com/aws/aws-cdk-go/awscdklambdagoalpha/v2 v2.126.0-alpha.0
 	github.com/aws/constructs-go/constructs/v10 v10.3.0
 	github.com/aws/jsii-runtime-go v1.94.0
-	github.com/google/wire v0.5.0
+	github.com/google/wire v0.6.0
 )
 
 require (
@@ -20,9 +20,9 @@ require (
 	github.com/fatih/color v1.16.0 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
-	github.com/yuin/goldmark v1.6.0 // indirect
+	github.com/yuin/goldmark v1.7.0 // indirect
 	golang.org/x/lint v0.0.0-20210508222113-6edffad5e616 // indirect
-	golang.org/x/mod v0.14.0 // indirect
-	golang.org/x/sys v0.16.0 // indirect
+	golang.org/x/mod v0.15.0 // indirect
+	golang.org/x/sys v0.17.0 // indirect
 	golang.org/x/tools v0.17.0 // indirect
 )

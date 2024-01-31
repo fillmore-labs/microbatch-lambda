@@ -12,7 +12,7 @@ import (
 )
 
 func Handler(
-	_ context.Context,
+	ctx context.Context,
 	request *events.APIGatewayV2HTTPRequest,
 ) (*events.APIGatewayV2HTTPResponse, error) {
 	jobs, err := UnmarshalBody(request)
@@ -20,7 +20,10 @@ func Handler(
 		return nil, err
 	}
 
-	results := ProcessJobs(jobs)
+	results, err := ProcessJobs(ctx, jobs)
+	if err != nil {
+		return nil, err
+	}
 
 	return MarshalResponse(results)
 }

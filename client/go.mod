@@ -2,13 +2,14 @@ module github.com/fillmore-labs/microbatch-lambda/client
 
 go 1.21
 
-toolchain go1.21.6
+toolchain go1.22.0
 
 require (
-	fillmore-labs.com/microbatch v0.2.2
+	fillmore-labs.com/exp/async v0.0.2
+	fillmore-labs.com/microbatch v0.3.1
 	github.com/aws/aws-sdk-go-v2 v1.24.1
-	github.com/aws/aws-sdk-go-v2/config v1.26.5
-	github.com/fillmore-labs/microbatch-lambda/api v0.0.0-20240117094737-136b93044170
+	github.com/aws/aws-sdk-go-v2/config v1.26.6
+	github.com/fillmore-labs/microbatch-lambda/api v0.0.0-20240122153305-e491b103aa34
 	github.com/spf13/viper v1.18.2
 	google.golang.org/protobuf v1.32.0
 )
@@ -18,7 +19,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/feature/ec2/imds v1.14.11 // indirect
 	github.com/aws/aws-sdk-go-v2/internal/configsources v1.2.10 // indirect
 	github.com/aws/aws-sdk-go-v2/internal/endpoints/v2 v2.5.10 // indirect
-	github.com/aws/aws-sdk-go-v2/internal/ini v1.7.2 // indirect
+	github.com/aws/aws-sdk-go-v2/internal/ini v1.7.3 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/accept-encoding v1.10.4 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/presigned-url v1.10.10 // indirect
 	github.com/aws/aws-sdk-go-v2/service/sso v1.18.7 // indirect
@@ -38,8 +39,8 @@ require (
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/subosito/gotenv v1.6.0 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
-	golang.org/x/exp v0.0.0-20240119083558-1b970713d09a // indirect
-	golang.org/x/sys v0.16.0 // indirect
+	golang.org/x/exp v0.0.0-20240205201215-2c58cdc269a3 // indirect
+	golang.org/x/sys v0.17.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect

@@ -7,6 +7,7 @@ import (
 	"sync"
 	"time"
 
+	"fillmore-labs.com/exp/async"
 	"fillmore-labs.com/microbatch"
 	"github.com/aws/aws-sdk-go-v2/config"
 	pb "github.com/fillmore-labs/microbatch-lambda/api/proto/v1alpha1"
@@ -30,27 +31,26 @@ func readProcessorConfig() (ProcessorConfig, error) {
 }
 
 func main() {
-	ctx := context.Background()
-
 	pcfg, err := readProcessorConfig()
 	if err != nil {
 		log.Fatalf("Failed to read configuration: %v", err)
 	}
 
-	cfg, err := config.LoadDefaultConfig(ctx)
+	cfg, err := config.LoadDefaultConfig(context.Background())
 	if err != nil {
 		log.Fatalf("Failed to load AWS configuration: %v", err)
 	}
 
-	requestContext, cancel := context.WithCancel(ctx)
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
 
-	processor := NewRemoteProcessor(requestContext, cfg.Credentials, pcfg)
+	processor := NewRemoteProcessor(ctx, cfg.Credentials, pcfg)
 
 	const batchSize = 15
 	const batchDelay = 250 * time.Millisecond
 
 	batcher := microbatch.NewBatcher(
-		processor,
+		processor.ProcessJobs,
 		(*pb.Job).GetCorrelationId,
 		(*pb.JobResult).GetCorrelationId,
 		microbatch.WithSize(batchSize),
@@ -64,41 +64,30 @@ func main() {
 
 	var wg sync.WaitGroup
 	for i := 0; i < iterations; i++ {
+		request := &pb.Job{
+			Body:          fmt.Sprintf("Job %d", i),
+			CorrelationId: int64(i),
+		}
+
+		future := batcher.SubmitJob(request)
+
 		wg.Add(1)
-		go submitWork(requestContext, batcher, int64(i+1), &wg)
+		go func(i int) {
+			defer wg.Done()
+			if result, err := async.Then(ctx, future, unwrap); err == nil {
+				log.Printf("Result of job %d: %s\n", i, result)
+			} else {
+				log.Printf("Error executing job %d: %v\n", i, err)
+			}
+		}(i)
+
 		time.Sleep(delay)
 	}
-	wg.Wait()
-
-	cancel()
 	batcher.Shutdown()
 
+	wg.Wait()
+
 	log.Println("Done...")
-}
-
-func submitWork(ctx context.Context, batcher *microbatch.Batcher[*pb.Job, *pb.JobResult], i int64, wg *sync.WaitGroup) {
-	defer wg.Done()
-
-	request := &pb.Job{
-		Body:          fmt.Sprintf("Job %d", i),
-		CorrelationId: i,
-	}
-
-	reply, err := batcher.ExecuteJob(ctx, request)
-	if err != nil {
-		log.Printf("Error executing job %d: %v\n", i, err)
-
-		return
-	}
-
-	result, err := extract(reply)
-	if err != nil {
-		log.Printf("Error executing job %d: %v\n", i, err)
-
-		return
-	}
-
-	log.Printf("Result of job %d: %s\n", i, result)
 }
 
 type remoteError struct {
@@ -111,15 +100,15 @@ func (r *remoteError) Error() string {
 
 var errMissingResult = &remoteError{"missing result"}
 
-func extract(reply *pb.JobResult) (string, error) {
-	result := reply.GetResult()
+func unwrap(result *pb.JobResult) (string, error) {
+	r := result.GetResult()
 
-	switch r := result.(type) {
-	case *pb.JobResult_Error:
-		return "", &remoteError{r.Error}
-
+	switch r := r.(type) {
 	case *pb.JobResult_Body:
 		return r.Body, nil
+
+	case *pb.JobResult_Error:
+		return "", &remoteError{r.Error}
 
 	default:
 		return "", errMissingResult

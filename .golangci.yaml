@@ -24,3 +24,8 @@ linters:
     - varnamelen
     - wrapcheck
     - wsl
+linters-settings:
+  testifylint:
+    enable-all: true
+    disable:
+      - require-error
