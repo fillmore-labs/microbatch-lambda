@@ -16,28 +16,31 @@
 
 package main
 
-import (
-	"log/slog"
-	"runtime/debug"
+import pb "github.com/fillmore-labs/microbatch-lambda/api/proto/v1alpha1"
 
-	"github.com/aws/aws-lambda-go/lambda"
-	function "github.com/fillmore-labs/microbatch-lambda/lambda"
-)
-
-func main() {
-	slog.Info("Starting", "revision", revision())
-
-	lambda.StartWithOptions(function.Handler)
+type remoteError struct {
+	msg string
 }
 
-func revision() string {
-	if info, ok := debug.ReadBuildInfo(); ok {
-		for _, setting := range info.Settings {
-			if setting.Key == "vcs.revision" {
-				return setting.Value
-			}
-		}
+func (r *remoteError) Error() string {
+	return r.msg
+}
+
+var errMissingResult = &remoteError{"missing result"}
+
+func unwrap(result *pb.JobResult, err error) (string, error) {
+	if err != nil {
+		return "", err
 	}
 
-	return "development"
+	switch r := result.GetResult().(type) {
+	case *pb.JobResult_Body:
+		return r.Body, nil
+
+	case *pb.JobResult_Error:
+		return "", &remoteError{r.Error}
+
+	default:
+		return "", errMissingResult
+	}
 }

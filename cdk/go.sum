@@ -1,9 +1,9 @@
 github.com/Masterminds/semver/v3 v3.2.1 h1:RN9w6+7QoMeJVGyfmbcgs28Br8cvmnucEXnY0rYXWg0=
 github.com/Masterminds/semver/v3 v3.2.1/go.mod h1:qvl/7zhW3nngYb5+80sSMF+FG2BjYrf8m9wsX0PNOMQ=
-github.com/aws/aws-cdk-go/awscdk/v2 v2.126.0 h1:8NCo5u18AsiUhAvggnxlOGNb6TkgP+VVtlPaegnSZnY=
-github.com/aws/aws-cdk-go/awscdk/v2 v2.126.0/go.mod h1:TpmJwOnoajvRtwnLlJoxEoppb9sVoCLfPGLdgoTDH7o=
-github.com/aws/aws-cdk-go/awscdklambdagoalpha/v2 v2.126.0-alpha.0 h1:7KcoU3Wr/fzoDU0g2p4XeOcSduOMmMo/k0+6UUIsQ9A=
-github.com/aws/aws-cdk-go/awscdklambdagoalpha/v2 v2.126.0-alpha.0/go.mod h1:XfR0KRcg8NvRnIs9g3axXSr98sDSxwR3S5rrmzJXl9E=
+github.com/aws/aws-cdk-go/awscdk/v2 v2.130.0 h1:89c3plfxwtxV+GaY1nMjhWOFsUrufEpykrVRTa/rVYk=
+github.com/aws/aws-cdk-go/awscdk/v2 v2.130.0/go.mod h1:TpmJwOnoajvRtwnLlJoxEoppb9sVoCLfPGLdgoTDH7o=
+github.com/aws/aws-cdk-go/awscdklambdagoalpha/v2 v2.130.0-alpha.0 h1:4Yreqx7dF3J60zAhZPNGA6N2bTIjI7HuSgBKUawUhmo=
+github.com/aws/aws-cdk-go/awscdklambdagoalpha/v2 v2.130.0-alpha.0/go.mod h1:rhHYCFMiYWkg2tYIIT17Kk9MoVvrBfFN58UZfMMLVf0=
 github.com/aws/constructs-go/constructs/v10 v10.3.0 h1:LsjBIMiaDX/vqrXWhzTquBJ9pPdi02/H+z1DCwg0PEM=
 github.com/aws/constructs-go/constructs/v10 v10.3.0/go.mod h1:GgzwIwoRJ2UYsr3SU+JhAl+gq5j39bEMYf8ev3J+s9s=
 github.com/aws/jsii-runtime-go v1.94.0 h1:VuVDx0xL2gbsJthUMfP+SwAXGkSEQd0GKm0ydZ8xga8=
@@ -95,8 +95,9 @@ golang.org/x/tools v0.0.0-20200130002326-2f3ba24bd6e7/go.mod h1:TB2adYChydJhpapK
 golang.org/x/tools v0.1.12/go.mod h1:hNGJHUnrk76NpqgfD5Aqm5Crs+Hm0VOH/i9J2+nxYbc=
 golang.org/x/tools v0.6.0/go.mod h1:Xwgl3UAJ/d3gWutnCtw505GrjyAbvKui8lOU390QaIU=
 golang.org/x/tools v0.13.0/go.mod h1:HvlwmtVNQAhOuCjW7xxvovg8wbNq7LwfXh/k7wXUl58=
-golang.org/x/tools v0.17.0 h1:FvmRgNOcs3kOa+T20R1uhfP9F6HgG2mfxDv1vrx1Htc=
 golang.org/x/tools v0.17.0/go.mod h1:xsh6VxdV005rRVaS6SSAf9oiAqljS7UZUacMZ8Bnsps=
+golang.org/x/tools v0.18.0 h1:k8NLag8AGHnn+PHbl7g43CtqZAwG60vZkLqgyZgIHgQ=
+golang.org/x/tools v0.18.0/go.mod h1:GL7B4CwcLLeo59yx/9UWWuNOW1n3VZ4f5axWfML7Lcg=
 golang.org/x/xerrors v0.0.0-20190717185122-a985d3407aa7/go.mod h1:I/5z698sn9Ka8TeJc9MKroUUfqBBauWjQqLJ2OPfmY0=
 golang.org/x/xerrors v0.0.0-20191011141410-1b5146add898/go.mod h1:I/5z698sn9Ka8TeJc9MKroUUfqBBauWjQqLJ2OPfmY0=
 gopkg.in/yaml.v3 v3.0.1 h1:fxVm/GzAzEWqLHuvctI91KS9hhNmmWOoWu0XTYJS7CA=

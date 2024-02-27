@@ -1,5 +1,6 @@
 {
   "app": "go run ./cdk",
+  "requireApproval": "never",
   "versionReporting": false,
   "watch": {
     "include": [
