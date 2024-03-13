@@ -1,7 +1,7 @@
 #!/bin/sh -eu
 
 if ! command -v protoc-gen-go &> /dev/null; then
-  go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.32.0
+  go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.33.0
 fi
 
 for proto_path in v1alpha1; do

@@ -33,5 +33,5 @@ func main() {
 	for _, stack := range stacks {
 		stackNames = append(stackNames, *stack.DisplayName())
 	}
-	fmt.Printf("Synthesized stacks %s", strings.Join(stackNames, ", "))
+	fmt.Printf("Synthesized stacks %s\n", strings.Join(stackNames, ", "))
 }

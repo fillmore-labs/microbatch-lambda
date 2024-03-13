@@ -15,7 +15,6 @@
 // SPDX-License-Identifier: Apache-2.0
 
 //go:build wireinject
-// +build wireinject
 
 package server
 

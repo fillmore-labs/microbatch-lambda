@@ -20,7 +20,7 @@ import (
 	cdk "github.com/aws/aws-cdk-go/awscdk/v2"
 	lambda "github.com/aws/aws-cdk-go/awscdk/v2/awslambda"
 	logs "github.com/aws/aws-cdk-go/awscdk/v2/awslogs"
-	lambda_go "github.com/aws/aws-cdk-go/awscdklambdagoalpha/v2"
+	lambdago "github.com/aws/aws-cdk-go/awscdklambdagoalpha/v2"
 	"github.com/aws/jsii-runtime-go"
 )
 
@@ -33,13 +33,13 @@ func NewLogGroup(scope Scope) LogGroup {
 }
 
 func NewFn(scope Scope, logGroup LogGroup) Fn {
-	fn := lambda_go.NewGoFunction(scope, jsii.String("Handler"), &lambda_go.GoFunctionProps{
+	fn := lambdago.NewGoFunction(scope, jsii.String("Handler"), &lambdago.GoFunctionProps{
 		Entry:     jsii.String("lambda/cmd/bootstrap"),
 		ModuleDir: jsii.String("lambda"),
-		Bundling: &lambda_go.BundlingOptions{
+		Bundling: &lambdago.BundlingOptions{
 			GoBuildFlags: jsii.Strings("-ldflags \"-s -w\""),
 			GoProxies: &[]*string{
-				lambda_go.GoFunction_GOOGLE_GOPROXY(),
+				lambdago.GoFunction_GOOGLE_GOPROXY(),
 				jsii.String("direct"),
 			},
 		},
@@ -59,13 +59,11 @@ func NewFnURL(scope Scope, fn Fn) FnURL {
 	})
 
 	cdk.NewCfnOutput(scope, jsii.String("ServerUrl"), &cdk.CfnOutputProps{
-		Value:      fnURL.Url(),
-		ExportName: jsii.String("ServerUrl"),
+		Value: fnURL.Url(),
 	})
 
 	cdk.NewCfnOutput(scope, jsii.String("ServerRegion"), &cdk.CfnOutputProps{
-		Value:      fnURL.Env().Region,
-		ExportName: jsii.String("ServerRegion"),
+		Value: fnURL.Env().Region,
 	})
 
 	return fnURL

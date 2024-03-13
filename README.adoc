@@ -1,8 +1,8 @@
 = Go Micro-Batch Demonstration
 :Author:    Oliver Eikemeier
 :Email:     <eikemeier@fillmore-labs.com>
-:Date:      2023-12
-:Revision:  v0.0.2
+:Date:      2024-03
+:Revision:  v0.0.3
 :toc: macro
 
 image:https://img.shields.io/github/license/fillmore-labs/microbatch-lambda[title="License",link=https://github.com/fillmore-labs/microbatch-lambda/blob/main/LICENSE]
@@ -38,7 +38,7 @@ go run ./client
 === Cleaning Up
 
 [source,shell]
-cdk destroy
+cdk destroy -f
 
 == Packages
 
@@ -54,7 +54,7 @@ Shared API for client and lambda handler.
 
 The https://docs.aws.amazon.com/lambda/latest/dg/golang-handler.html[AWS Lambda] function handler.
 
-The business logic `ProcessJobs` is in link:lambda/function.go#L10[function.go].
+The business logic `ProcessJobs` is in link:lambda/function.go#L40[function.go].
 
 === lambda/cmd/bootstrap
 
